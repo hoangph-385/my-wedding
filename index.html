@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiệp Cưới Huy Hoàng ❤️ Phương Thảo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background: #fff5f5;
+            overflow-x: hidden;
+            color: #333;
+        }
+
+        /* Preloader */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #fff5f5;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+
+        .loader-heart {
+            font-size: 50px;
+            color: #d4756e;
+            animation: pulse 1s infinite;
+        }
+
+        .loader-text {
+            margin-top: 20px;
+            font-family: 'Playfair Display', serif;
+            font-size: 1.2rem;
+            color: #b5835a;
+        }
+
+        .enter-btn {
+            margin-top: 24px;
+            padding: 12px 24px;
+            border-radius: 999px;
+            border: 1px solid #d4756e;
+            background: rgba(212, 117, 110, 0.12);
+            color: #d4756e;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: not-allowed;
+            transition: all 0.25s ease;
+        }
+
+        .enter-btn.ready {
+            cursor: pointer;
+            background: #d4756e;
+            color: white;
+            box-shadow: 0 10px 25px rgba(212, 117, 110, 0.35);
+        }
+
+        .enter-btn.ready:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 28px rgba(212, 117, 110, 0.4);
+        }
+
+        /* Envelope on preloader */
+        .envelope {
+            margin-top: 28px;
+            width: 220px;
+            height: 140px;
+            position: relative;
+            border-radius: 7px;
+            background: linear-gradient(180deg, #fff, #ffe8e8);
+            border: 1px solid #f2c9c9;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            display: none;
+            opacity: 0;
+            transform: translateY(8px);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            perspective: 1000px;
+        }
+        /* hide old pseudo flap, use real element */
+        .envelope::before { display: none; }
+
+        .envelope-flap {
+            position: absolute;
+            top: -1px;
+            left: 0;
+            width: 100%;
+            height: 65px;
+            background: linear-gradient(180deg, #ffe0e0, #ffd1d1);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            border-top-left-radius: 7px;
+            border-top-right-radius: 7px;
+            transform-origin: 50% 0%;
+            transform: rotateX(0deg);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: transform;
+        }
+
+        .heart-open {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 8px 16px;
+            border-radius: 25px;
+            border: 1px solid #d4756e;
+            background: radial-gradient(circle at 30% 30%, #ffb5b5, #d4756e);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(212, 117, 110, 0.35);
+            animation: pulse 1.5s infinite;
+            z-index: 5;
+            white-space: nowrap;
+        }
+
+        /* Show envelope after preload ready */
+        #preloader.ready .envelope { display: flex; justify-content: center; align-items: center; opacity: 1; transform: translateY(0); }
+        #preloader.ready .loader-heart,
+        #preloader.ready .loader-text,
+        #preloader.ready .enter-btn { display: none; }
+
+        /* flap open state */
+        .envelope.opening .envelope-flap,
+        .envelope.opened .envelope-flap {
+            transform: rotateX(165deg);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            text-align: center;
+            background: linear-gradient(135deg, #f5e6e0 0%, #fff5f5 50%, #e8d4cf 100%);
+            position: relative;
+            overflow: hidden;
+            padding: 60px 40px;
+        }
+
+        /* Decorative background pattern */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(212, 117, 110, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(181, 131, 90, 0.08) 0%, transparent 50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Container cho hero-cover và hero-content */
+        .hero-wrapper {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            z-index: 2;
+            max-width: 1100px;
+            width: 100%;
+        }
+
+        /* Ảnh cover trong hero */
+        .hero-cover {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            max-width: 480px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 80px rgba(139, 69, 19, 0.25), 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .hero-cover img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 20px;
+        }
+
+        /* Responsive: Mobile - xếp dọc */
+        @media (max-width: 900px) {
+            .hero {
+                flex-direction: column;
+                padding: 40px 20px;
+            }
+            .hero-wrapper {
+                flex-direction: column;
+                gap: 30px;
+            }
+            .hero-cover {
+                max-width: 100%;
+                width: 100%;
+            }
+            .hero-content {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        .hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 122, 138, 0.8);
+            font-size: 20px;
+            user-select: none;
+            will-change: transform;
+            animation: fall linear forwards;
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-10vh) rotate(0deg); }
+            100% { transform: translateY(110vh) rotate(360deg); }
+        }
+
+        /* Music Button */
+        .music-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            background: rgba(212, 117, 110, 0.8);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            border: none;
+            outline: none;
+        }
+
+        .music-btn.playing {
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            flex: 1;
+            color: #5a4a42;
+            padding: 40px 45px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            max-width: 420px;
+            box-shadow:
+                0 20px 60px rgba(139, 69, 19, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .hero-label {
+            font-size: 0.85rem;
+            letter-spacing: 5px;
+            margin-bottom: 15px;
+            color: #b5835a;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            margin-bottom: 5px;
+            color: #8b4513;
+            text-shadow: none;
+            line-height: 1.2;
+        }
+
+        .hero .ampersand {
+            font-size: 2rem;
+            margin: 8px 0;
+            color: #d4756e;
+            font-family: 'Great Vibes', cursive;
+        }
+
+        .hero .date {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            margin-top: 20px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #b5835a;
+            font-weight: 600;
+        }
+
+        .calendar-button {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 14px 30px;
+            background: linear-gradient(135deg, #d4756e 0%, #c4635c 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            border: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(212, 117, 110, 0.35);
+        }
+
+        .calendar-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(212, 117, 110, 0.45);
+            background: linear-gradient(135deg, #e08078 0%, #d4756e 100%);
+        }
+
+        /* Info Section */
+        .info-section {
+            max-width: 900px;
+            margin: 60px auto 80px;
+            padding: 60px 30px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 10;
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            text-align: center;
+            color: #b5835a;
+            margin-bottom: 50px;
+        }
+
+        .couple-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .person {
+            text-align: center;
+            padding: 40px 20px;
+            background: #fff9f5;
+            border-radius: 20px;
+            border: 1px solid #f0e0d0;
+            transition: transform 0.3s;
+        }
+
+        .person:hover {
+            transform: translateY(-5px);
+        }
+
+        .person h3 {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            color: #8b4513;
+            margin-bottom: 10px;
+        }
+
+        .person .role {
+            font-size: 1rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Timeline */
+        .timeline {
+            background: #fdf2f2;
+            padding: 40px;
+            border-radius: 20px;
+            margin: 40px 0;
+        }
+
+        .timeline h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            text-align: center;
+            color: #d4756e;
+            margin-bottom: 30px;
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 25px 0;
+            font-size: 1.2rem;
+        }
+
+        .timeline-item .time {
+            font-weight: 700;
+            color: #d4756e;
+            width: 100px;
+            text-align: right;
+            padding-right: 20px;
+            border-right: 2px solid #ffdada;
+        }
+
+        .timeline-item .event {
+            padding-left: 20px;
+            color: #555;
+            flex: 1;
+        }
+
+        /* Location */
+        .location {
+            text-align: center;
+            padding: 50px 30px;
+            background: #fff9f5;
+            border-radius: 20px;
+            border: 1px solid #f0e0d0;
+        }
+
+        .location h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            color: #b5835a;
+            margin-bottom: 20px;
+        }
+
+        .location p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #666;
+        }
+
+        .map-button {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 18px 45px;
+            background: #b5835a;
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s;
+            box-shadow: 0 10px 20px rgba(181, 131, 90, 0.3);
+        }
+
+        .map-button:hover {
+            background: #8b4513;
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(181, 131, 90, 0.4);
+        }
+
+        /* Menu Section */
+        .menu-section {
+            background: #fff;
+            padding: 50px 30px;
+            border-radius: 20px;
+            border: 2px dashed #d4756e;
+            text-align: center;
+            position: relative;
+            margin-top: 40px;
+        }
+
+        .menu-section h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #d4756e;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .menu-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .menu-item {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            color: #444;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .menu-item:not(:last-child)::after {
+            content: '✦';
+            display: block;
+            font-size: 0.8rem;
+            color: #ffdada;
+            margin-top: 10px;
+        }
+
+        /* Gallery Slider */
+        .gallery {
+            padding: 100px 0;
+            background: white;
+        }
+
+        .swiper {
+            width: 100%;
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+
+        .swiper-slide {
+            background-position: center;
+            background-size: contain;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: auto;
+            min-height: 300px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .swiper-slide img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            object-fit: contain;
+        }
+
+        /* Gallery navigation buttons */
+        .swiper-button-next,
+        .swiper-button-prev {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .swiper:hover .swiper-button-next,
+        .swiper:hover .swiper-button-prev {
+            opacity: 1;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 100px 20px;
+            background: #2c2c2c;
+            color: white;
+        }
+
+        .footer h2 {
+            font-family: 'Great Vibes', cursive;
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #f0e0d0;
+        }
+
+        .footer p {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            font-weight: 300;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .couple-info {
+                grid-template-columns: 1fr;
+            }
+            .info-section {
+                margin-top: -30px;
+                padding: 40px 20px;
+            }
+            .swiper-slide {
+                width: 260px;
+                height: 390px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Preloader -->
+    <div id="preloader">
+        <div class="loader-heart">❤</div>
+        <div class="loader-text">Đang chuẩn bị thiệp cưới...</div>
+        <button id="enterBtn" class="enter-btn" disabled>Đang tải ảnh...</button>
+        <div class="envelope">
+            <div class="envelope-flap"></div>
+            <button id="heartOpen" class="heart-open">❤ Open ❤</button>
+        </div>
+    </div>
+
+    <!-- Heart Container for whole page -->
+    <div class="hearts" id="hearts"></div>
+
+    <!-- Music -->
+    <audio id="weddingSong" loop>
+        <source src="song.mp3" type="audio/mpeg">
+    </audio>
+    <button class="music-btn" id="musicBtn">
+        🎵
+    </button>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-wrapper">
+            <!-- Ảnh Cover -->
+            <div class="hero-cover">
+                <img src="Cover.jpg" alt="Ảnh bìa Huy Hoàng & Phương Thảo">
+            </div>
+
+            <!-- Thông tin cưới -->
+            <div class="hero-content">
+                <p class="hero-label">Save The Date</p>
+                <h1>Huy Hoàng</h1>
+                <div class="ampersand">&</div>
+                <h1>Phương Thảo</h1>
+                <p class="date">04 . 01 . 2026</p>
+                <a href="https://www.google.com/calendar/render?action=TEMPLATE&text=%C4%90%C3%A1m+c%C6%B0%E1%BB%9Bi+Huy+Ho%C3%A0ng+%26+Ph%C6%B0%C6%A1ng+Th%E1%BA%A3o&dates=20260104T040000Z/20260104T070000Z&details=Tr%C3%A2n+tr%E1%BB%8Dng+k%C3%ADnh+m%E1%BB%9Di+b%E1%BA%A1n+%C4%91%E1%BA%BFn+d%E1%BB%B1+l%E1%BB%85+th%C3%A0nh+h%C3%B4n+c%E1%BB%A7a+Huy+Ho%C3%A0ng+v%C3%A0+Ph%C6%B0%C6%A1ng+Th%E1%BA%A3o.&location=Nh%C3%A0+h%C3%A0ng+Ph%C3%BA+Gia+Xavia,+%C4%90.+2+Th%C3%A1ng+9,+Ho%C3%A0+C%C6%B0%E1%BB%9Dng+B%E1%BA%AFc,+H%E1%BA%A3i+Ch%C3%A2u,+%C4%90%C3%A0+N%E1%BA%B5ng"
+                   target="_blank"
+                   class="calendar-button">
+                    📅 Thêm Vào Lịch
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Info Section -->
+    <section class="info-section">
+        <div class="timeline">
+            <h3>Chương Trình Tiệc</h3>
+            <div class="timeline-item">
+                <span class="time">11:00</span>
+                <span class="event">Đón khách & Chụp hình lưu niệm</span>
+            </div>
+            <div class="timeline-item">
+                <span class="time">12:00</span>
+                <span class="event">Khai mạc Nghi lễ thành hôn</span>
+            </div>
+            <div class="timeline-item">
+                <span class="time">12:30</span>
+                <span class="event">Nhập tiệc chúc mừng</span>
+            </div>
+            <div class="timeline-item">
+                <span class="time">13:45</span>
+                <span class="event">Tiễn khách và chụp ảnh lưu niệm</span>
+            </div>
+        </div>
+
+        <div class="location">
+            <h3>Địa Điểm Tổ Chức</h3>
+            <p style="font-size: 1.4rem; color: #333; margin-bottom: 10px;"><strong>Phú Gia Xavia Restaurant</strong></p>
+            <p>Đường 2 Tháng 9, Hoà Cường Bắc</p>
+            <p>Quận Hải Châu, TP. Đà Nẵng</p>
+            <a href="https://www.google.com/maps/place/Ph%C3%BA+Gia+Xavia+Restaurant/@16.0426043,108.2218539,17z/data=!3m1!4b1!4m6!3m5!1s0x31421944f53b4955:0x39233d7e59760bd1!8m2!3d16.0426043!4d108.2244288!16s%2Fg%2F11srbpvzhy?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA2OUgBUAM%3D"
+               target="_blank"
+               class="map-button">
+                CHỈ ĐƯỜNG ĐẾN NHÀ HÀNG
+            </a>
+        </div>
+
+        <!-- Menu Section -->
+        <div class="menu-section">
+            <h3>🍽️ Thực Đơn Tiệc Cưới</h3>
+            <ul class="menu-list">
+                <li class="menu-item">Gỏi nem công, chả phượng</li>
+                <li class="menu-item">Súp hải sản rong biển</li>
+                <li class="menu-item">Bò lúc lắc</li>
+                <li class="menu-item">Tôm hoàng kim</li>
+                <li class="menu-item">Vịt quay sốt tiêu đen</li>
+                <li class="menu-item">Búp bò hầm tiêu xanh</li>
+                <li class="menu-item">Đông sương rau câu dừa</li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Gallery Slider -->
+    <section class="gallery">
+        <h2 class="section-title">Album Hình Cưới</h2>
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <!-- Slides will be injected dynamically from images/images.json -->
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <h2>Thank You!</h2>
+        <p>Sự hiện diện của quý vị là niềm hạnh phúc lớn nhất của chúng tôi.</p>
+        <p style="margin-top: 30px; font-size: 1.5rem; color: #f0e0d0;">Huy Hoàng ❤️ Phương Thảo</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="generated-images.js"></script>
+    <script>
+        // Chỉ preload các ảnh quan trọng nhất để vào trang nhanh
+        const criticalImages = [
+            'Cover.jpg',
+            '001-002.jpg'
+        ];
+
+        let loadedImagesCount = 0;
+        const preloader = document.getElementById('preloader');
+        const enterBtn = document.getElementById('enterBtn');
+        const heartOpen = document.getElementById('heartOpen');
+        const envelopeEl = document.querySelector('.envelope');
+        const loaderHeart = document.querySelector('.loader-heart');
+        const loaderText = document.querySelector('.loader-text');
+        let cardReady = false;
+        let cardOpened = false;
+
+        function imageLoaded() {
+            loadedImagesCount++;
+            if (loadedImagesCount === criticalImages.length) {
+                cardReady = true;
+                enterBtn.disabled = false;
+                enterBtn.textContent = 'Chạm để mở thiệp';
+                enterBtn.classList.add('ready');
+                if (heartOpen) heartOpen.textContent = '❤ Open ❤';
+                preloader.classList.add('ready');
+            }
+        }
+
+        // Bắt đầu preload ảnh quan trọng
+        criticalImages.forEach(src => {
+            const img = new Image();
+            img.onload = imageLoaded;
+            img.onerror = imageLoaded;
+            img.src = src;
+        });
+
+        // Tối ưu hiệu ứng tim rơi (đậm hơn + nhiều hơn)
+        const heartsContainer = document.getElementById('hearts');
+        const maxHearts = 18;
+        let currentHearts = 0;
+
+        function createHeart() {
+            if (currentHearts >= maxHearts) return;
+            currentHearts++;
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.textContent = '❤';
+            heart.style.left = Math.random() * 100 + '%';
+            const duration = Math.random() * 4 + 4;
+            heart.style.animationDuration = duration + 's';
+            heart.style.opacity = Math.random() * 0.4 + 0.4; // đậm hơn
+            heart.style.fontSize = (Math.random() * 12 + 14) + 'px';
+            heartsContainer.appendChild(heart);
+            setTimeout(() => {
+                heart.remove();
+                currentHearts--;
+            }, duration * 1000);
+        }
+        setInterval(createHeart, 650);
+
+        // Music Control
+        const music = document.getElementById('weddingSong');
+        const musicBtn = document.getElementById('musicBtn');
+        let isPlaying = false;
+
+        function playMusic(force = false) {
+            if (!isPlaying || force) {
+                music.play().then(() => {
+                    isPlaying = true;
+                    musicBtn.classList.add('playing');
+                    musicBtn.textContent = '🎵';
+                }).catch(e => console.log("Autoplay blocked, waiting for interaction"));
+            }
+        }
+
+        musicBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // Ngăn chặn sự kiện click của document
+            if (isPlaying) {
+                music.pause();
+                musicBtn.classList.remove('playing');
+                musicBtn.textContent = '🔇';
+            } else {
+                playMusic(true);
+            }
+            isPlaying = !isPlaying;
+        });
+
+        // Khởi động bằng tương tác bất kỳ (dự phòng nếu chưa bấm nút mở thiệp)
+        ['click', 'touchstart', 'scroll', 'mousemove'].forEach(event => {
+            document.addEventListener(event, () => playMusic(true), { once: true });
+        });
+
+        async function loadGalleryFromManifest() {
+            const wrapper = document.querySelector('.mySwiper .swiper-wrapper');
+            if (!wrapper) return;
+            wrapper.innerHTML = '';
+            try {
+                // Prefer embedded manifest (generated by GitHub Action) for static hosting
+                let imgs = window.__IMAGES_GENERATED;
+                if (!Array.isArray(imgs)) {
+                    const res = await fetch('images.json', { cache: 'no-cache' });
+                    if (!res.ok) throw new Error('Manifest not found');
+                    imgs = await res.json();
+                }
+                if (!Array.isArray(imgs) || imgs.length === 0) throw new Error('No images listed');
+                imgs.forEach(src => {
+                    const slide = document.createElement('div');
+                    slide.className = 'swiper-slide';
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = 'Wedding Photo';
+                    slide.appendChild(img);
+                    wrapper.appendChild(slide);
+                });
+                // hide pick button if visible
+                const pickBtn = document.getElementById('pickFolderBtn');
+                if (pickBtn) pickBtn.style.display = 'none';
+            } catch (e) {
+                console.warn('Không tìm thấy manifest images.json hoặc generated-images.js — hiển thị nút chọn thư mục nếu trình duyệt hỗ trợ.', e);
+                const pickBtn = document.getElementById('pickFolderBtn');
+                if (pickBtn) pickBtn.style.display = (window.showDirectoryPicker ? 'inline-block' : 'none');
+                const fallback = ['001-002.jpg','003-004.jpg','005-006.jpg'];
+                fallback.forEach(fn => {
+                    const slide = document.createElement('div');
+                    slide.className = 'swiper-slide';
+                    const img = document.createElement('img');
+                    img.src = fn;
+                    img.alt = 'Wedding Photo';
+                    slide.appendChild(img);
+                    wrapper.appendChild(slide);
+                });
+            }
+        }
+
+        async function openCard() {
+            if (!cardReady || cardOpened) return;
+            cardOpened = true;
+            playMusic(true);
+            preloader.style.opacity = '0';
+            preloader.style.visibility = 'hidden';
+            await loadGalleryFromManifest();
+            initSwiper();
+        }
+
+        // Nút mở thiệp & tương tác bất kỳ trên màn hình preloader
+        enterBtn.addEventListener('click', openCard);
+        if (heartOpen) heartOpen.addEventListener('click', openCard);
+        ['click', 'touchstart'].forEach(evt => {
+            preloader.addEventListener(evt, openCard, { once: true });
+        });
+
+        // Khởi tạo Swiper với Lazy Loading
+        function initSwiper() {
+            new Swiper(".mySwiper", {
+                effect: "slide",
+                speed: 850,
+                spaceBetween: 20,
+                autoHeight: true,
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 1,
+                loop: true,
+                lazy: true,
+                autoplay: {
+                    delay: 3300,
+                    disableOnInteraction: false,
+                    reverseDirection: false,
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                keyboard: {
+                    enabled: true,
+                },
+            });
+        }
+    </script>
+
+    <!-- Center heart-open precisely over envelope using JS -->
+    <script>
+        function centerHeartOverEnvelope() {
+            const env = document.querySelector('#preloader .envelope');
+            const btn = document.getElementById('heartOpen');
+            if (!env || !btn) return;
+
+            // ensure button is positioned absolute inside the envelope, reset transform
+            btn.style.position = 'absolute';
+            btn.style.transform = 'none';
+            btn.style.right = '';
+            btn.style.bottom = '';
+
+            // measure envelope and button (relative sizes)
+            const envRect = env.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+
+            // compute local center inside envelope (in envelope coordinates)
+            const leftInEnv = Math.round((envRect.width - btnRect.width) / 2);
+            const topInEnv = Math.round((envRect.height - btnRect.height) / 2);
+
+            // place button using local coordinates so it's centered inside the envelope
+            btn.style.left = leftInEnv + 'px';
+            btn.style.top = topInEnv + 'px';
+        }
+
+        // run when DOM ready
+        document.addEventListener('DOMContentLoaded', () => {
+            // center once images/layout applied
+            setTimeout(centerHeartOverEnvelope, 150);
+        });
+
+        // also re-center on resize, scroll and when preloader becomes ready
+        window.addEventListener('resize', centerHeartOverEnvelope);
+        window.addEventListener('scroll', centerHeartOverEnvelope);
+
+        // observe preloader attribute changes (e.g., class ready)
+        const pre = document.getElementById('preloader');
+        if (pre) {
+            const mo = new MutationObserver(muts => {
+                for (const m of muts) {
+                    if (m.attributeName === 'class') centerHeartOverEnvelope();
+                }
+            });
+            mo.observe(pre, { attributes: true });
+        }
+    </script>
+</body>
+</html>
