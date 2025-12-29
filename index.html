@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thiệp Cưới Huy Hoàng ❤️ Phương Thảo</title>
+    <title>04.01.26 -  Hoàng ❤️ Thảo</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="icon" href="icon.png" type="image/png">
+    <link rel="shortcut icon" href="icon.png">
+    <meta name="theme-color" content="#fff5f5">
     <style>
         * {
             margin: 0;
@@ -19,7 +22,13 @@
             overflow-x: hidden;
             color: #333;
         }
-        body.no-scroll { overflow: hidden; }
+        body.no-scroll {
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            overscroll-behavior: none;
+            touch-action: none;
+        }
 
         /* Preloader */
         #preloader {
@@ -674,7 +683,7 @@
     <div class="hearts" id="hearts"></div>
 
     <!-- Music -->
-    <audio id="weddingSong" loop>
+    <audio id="weddingSong">
         <source src="song.mp3" type="audio/mpeg">
     </audio>
     <button class="music-btn" id="musicBtn">
@@ -844,6 +853,13 @@
         const musicBtn = document.getElementById('musicBtn');
         let isPlaying = false;
 
+        // Ensure music does not loop indefinitely; update UI when it ends
+        music.addEventListener('ended', () => {
+            isPlaying = false;
+            musicBtn.classList.remove('playing');
+            musicBtn.textContent = '🔇';
+        });
+
         function playMusic(force = false) {
             if (!isPlaying || force) {
                 music.play().then(() => {
@@ -871,8 +887,23 @@
             document.addEventListener(event, () => playMusic(true), { once: true });
         });
 
+        // Helper: reliably disable/enable page scroll and preserve scroll position
+        let _savedScrollY = 0;
+        function disableScroll() {
+            _savedScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+            document.body.style.top = `-${_savedScrollY}px`;
+            document.body.classList.add('no-scroll');
+        }
+        function enableScroll() {
+            document.body.classList.remove('no-scroll');
+            const top = Math.abs(parseInt(document.body.style.top || '0')) || 0;
+            document.body.style.top = '';
+            window.scrollTo(0, top);
+            _savedScrollY = 0;
+        }
+
         // Disable page scroll while preloader is visible (avoids showing scrollbar on entry)
-        document.body.classList.add('no-scroll');
+        disableScroll();
 
         async function loadGalleryFromManifest() {
             const wrapper = document.querySelector('.mySwiper .swiper-wrapper');
@@ -923,7 +954,7 @@
             preloader.style.opacity = '0';
             preloader.style.visibility = 'hidden';
             // allow page scrolling again once card is opened
-            document.body.classList.remove('no-scroll');
+            enableScroll();
             await loadGalleryFromManifest();
             initSwiper();
         }
