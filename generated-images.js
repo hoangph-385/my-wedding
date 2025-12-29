@@ -1,5 +1,4 @@
-window.__IMAGES_GENERATED =
-[
+window.__IMAGES_GENERATED = [
   "img/@bia.jpg",
   "img/001-002.jpg",
   "img/003-004.jpg",
@@ -11,4 +10,4 @@ window.__IMAGES_GENERATED =
   "img/015-016.jpg",
   "img/017-018.jpg",
   "img/019-020.jpg"
-]
+];
