@@ -19,6 +19,7 @@
             overflow-x: hidden;
             color: #333;
         }
+        body.no-scroll { overflow: hidden; }
 
         /* Preloader */
         #preloader {
@@ -111,26 +112,48 @@
 
         .heart-open {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            padding: 8px 16px;
-            border-radius: 25px;
-            border: 1px solid #d4756e;
-            background: radial-gradient(circle at 30% 30%, #ffb5b5, #d4756e);
-            color: white;
+            /* centered placement is handled by JS so we keep absolute positioning */
+            width: 78px;
+            height: 78px;
+            padding: 0;
+            border: none;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            font-size: 13px;
-            font-weight: 600;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(212, 117, 110, 0.35);
-            animation: pulse 1.5s infinite;
             z-index: 5;
-            white-space: nowrap;
         }
+
+        .heart-open svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transition: transform 0.18s ease;
+            transform-origin: center center;
+            filter: drop-shadow(0 4px 12px rgba(212,117,110,0.22));
+        }
+
+        .heart-open:hover svg { transform: scale(1.06); }
+
+        .heart-open .heart-fill { fill: #d4756e; }
+        .heart-open .heart-stroke { stroke: rgba(255,255,255,0.15); stroke-width: 1; }
+        .heart-open .heart-text {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(calc(-50% - 4px), -54%); /* nudge left by ~2px and slightly up */
+            font-size: 12px;
+            color: #ffffff;
+            font-weight: 700;
+            line-height: 1;
+            pointer-events: none;
+            text-transform: none;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.22);
+        }
+        .heart-open.ready .heart-text { display: block; }
+
 
         /* Show envelope after preload ready */
         #preloader.ready .envelope { display: flex; justify-content: center; align-items: center; opacity: 1; transform: translateY(0); }
@@ -581,22 +604,35 @@
         /* Footer */
         .footer {
             text-align: center;
-            padding: 100px 20px;
+            padding: 48px 20px;
             background: #2c2c2c;
             color: white;
         }
 
         .footer h2 {
             font-family: 'Great Vibes', cursive;
-            font-size: 4rem;
-            margin-bottom: 20px;
+            font-size: 2.4rem;
+            margin-bottom: 12px;
             color: #f0e0d0;
         }
 
         .footer p {
-            font-size: 1.2rem;
-            opacity: 0.8;
+            font-size: 1rem;
+            opacity: 0.88;
             font-weight: 300;
+            margin: 6px 0;
+        }
+
+        @media (max-width: 768px) {
+            .footer { padding: 36px 16px; }
+            .footer h2 { font-size: 2rem; }
+            .footer p { font-size: 0.95rem; }
+            /* override inline large size for the last footer paragraph on small screens */
+            .footer > p:last-child {
+                font-size: 1rem !important;
+                margin-top: 8px !important;
+                color: #f0e0d0 !important;
+            }
         }
 
         /* Responsive */
@@ -624,7 +660,13 @@
         <button id="enterBtn" class="enter-btn" disabled>Đang tải ảnh...</button>
         <div class="envelope">
             <div class="envelope-flap"></div>
-            <button id="heartOpen" class="heart-open">❤ Open ❤</button>
+            <button id="heartOpen" class="heart-open" aria-label="Mở thiệp">
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                    <path class="heart-fill" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6.01 3.99 4 6.5 4c1.74 0 3.41.81 4.5 2.09C12.09 4.81 13.76 4 15.5 4 18.01 4 20 6.01 20 8.5c0 3.78-3.4 6.86-8.55 11.53L12 21.35z"/>
+                    <path class="heart-stroke" d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 6.01 3.99 4 6.5 4c1.74 0 3.41.81 4.5 2.09C12.09 4.81 13.76 4 15.5 4 18.01 4 20 6.01 20 8.5c0 3.78-3.4 6.86-8.55 11.53L12 21.35z" fill="none"/>
+                </svg>
+                <span class="heart-text">Open</span>
+            </button>
         </div>
     </div>
 
@@ -687,7 +729,7 @@
 
         <div class="location">
             <h3>Địa Điểm Tổ Chức</h3>
-            <p style="font-size: 1.4rem; color: #333; margin-bottom: 10px;"><strong>Phú Gia Xavia Restaurant</strong></p>
+            <p style="font-size: 1.4rem; color: #333; margin-bottom: 10px;"><strong>Nhà hàng Phú Gia Xavia</strong></p>
             <p>Đường 2 Tháng 9, Hoà Cường Bắc</p>
             <p>Quận Hải Châu, TP. Đà Nẵng</p>
             <a href="https://www.google.com/maps/place/Ph%C3%BA+Gia+Xavia+Restaurant/@16.0426043,108.2218539,17z/data=!3m1!4b1!4m6!3m5!1s0x31421944f53b4955:0x39233d7e59760bd1!8m2!3d16.0426043!4d108.2244288!16s%2Fg%2F11srbpvzhy?entry=ttu&g_ep=EgoyMDI1MTIwOS4wIKXMDSoKLDEwMDc5MjA2OUgBUAM%3D"
@@ -737,8 +779,7 @@
     <script>
         // Chỉ preload các ảnh quan trọng nhất để vào trang nhanh
         const criticalImages = [
-            'Cover.jpg',
-            '001-002.jpg'
+            'Cover.JPG',
         ];
 
         let loadedImagesCount = 0;
@@ -758,7 +799,10 @@
                 enterBtn.disabled = false;
                 enterBtn.textContent = 'Chạm để mở thiệp';
                 enterBtn.classList.add('ready');
-                if (heartOpen) heartOpen.textContent = '❤ Open ❤';
+                if (heartOpen) {
+                    heartOpen.setAttribute('aria-label', 'Mở thiệp');
+                    heartOpen.classList.add('ready');
+                }
                 preloader.classList.add('ready');
             }
         }
@@ -827,6 +871,9 @@
             document.addEventListener(event, () => playMusic(true), { once: true });
         });
 
+        // Disable page scroll while preloader is visible (avoids showing scrollbar on entry)
+        document.body.classList.add('no-scroll');
+
         async function loadGalleryFromManifest() {
             const wrapper = document.querySelector('.mySwiper .swiper-wrapper');
             if (!wrapper) return;
@@ -875,6 +922,8 @@
             playMusic(true);
             preloader.style.opacity = '0';
             preloader.style.visibility = 'hidden';
+            // allow page scrolling again once card is opened
+            document.body.classList.remove('no-scroll');
             await loadGalleryFromManifest();
             initSwiper();
         }
@@ -937,11 +986,15 @@
 
             // compute local center inside envelope (in envelope coordinates)
             const leftInEnv = Math.round((envRect.width - btnRect.width) / 2);
-            const topInEnv = Math.round((envRect.height - btnRect.height) / 2);
+            // raise the heart a few pixels so it visually sits on the flap
+            const topInEnv = Math.round((envRect.height - btnRect.height) / 2) - 6;
+
+            // ensure we don't place it above the envelope
+            const finalTop = Math.max(4, topInEnv);
 
             // place button using local coordinates so it's centered inside the envelope
             btn.style.left = leftInEnv + 'px';
-            btn.style.top = topInEnv + 'px';
+            btn.style.top = finalTop + 'px';
         }
 
         // run when DOM ready

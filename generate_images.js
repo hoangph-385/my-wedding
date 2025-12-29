@@ -2,8 +2,10 @@ const fs = require('fs');
 const path = require('path');
 
 // Usage: node generate_images.js [folder]
-// If folder provided (e.g., "src"), scans that folder and writes prefixed paths to images.json at project root.
-const folderArg = process.argv[2] || '';
+// If folder provided (e.g., "img"), scans that folder and writes prefixed paths to images.json at project root.
+// Defaults to `img/` if that directory exists in the repo.
+const defaultFolder = fs.existsSync(path.join(__dirname, 'img')) ? 'img' : '';
+const folderArg = process.argv[2] || defaultFolder;
 const targetDir = folderArg ? path.join(__dirname, folderArg) : __dirname;
 const outFile = path.join(__dirname, 'images.json');
 
